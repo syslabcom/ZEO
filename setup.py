@@ -32,7 +32,7 @@ tests_require = [
     'manuel',
     'random2',
     'mock',
-    'msgpack-python',
+    'msgpack',
     'zope.testrunner',
 ]
 
