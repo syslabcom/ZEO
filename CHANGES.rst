@@ -1,6 +1,12 @@
 Changelog
 =========
 
+5.1.1-slc1 (unreleased)
+-----------------------
+
+- Experimental workaround for connectivity problems: Throw away chunks
+  of blobs rather than failing completely
+
 5.1.1 (2017-12-18)
 ------------------
 
