@@ -457,20 +457,26 @@ class ZEOStorage(object):
         self.txnlog.restore(oid, serial, data, prev_txn)
 
     def storeBlobStart(self):
+        if self.blob_tempfile is not None:
+            fd, tempname = self.blob_tempfile
+            os.close(fd)
+            self.blob_tempfile = None
         assert self.blob_tempfile is None
         self.blob_tempfile = tempfile.mkstemp(
             dir=self.storage.temporaryDirectory())
 
     def storeBlobChunk(self, chunk):
-        os.write(self.blob_tempfile[0], chunk)
+        if self.blob_tempfile is not None:
+            os.write(self.blob_tempfile[0], chunk)
 
     def storeBlobEnd(self, oid, serial, data, id):
         self._check_tid(id, exc=StorageTransactionError)
-        assert self.txnlog is not None # effectively not allowed after undo
-        fd, tempname = self.blob_tempfile
-        self.blob_tempfile = None
-        os.close(fd)
-        self.blob_log.append((oid, serial, data, tempname))
+        assert self.txnlog is not None  # effectively not allowed after undo
+        if self.blob_tempfile is not None:
+            fd, tempname = self.blob_tempfile
+            self.blob_tempfile = None
+            os.close(fd)
+            self.blob_log.append((oid, serial, data, tempname))
 
     def storeBlobShared(self, oid, serial, data, filename, id):
         self._check_tid(id, exc=StorageTransactionError)
