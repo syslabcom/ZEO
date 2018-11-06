@@ -1,8 +1,8 @@
 Changelog
 =========
 
-5.1.1b1 (unreleased)
------------------------
+5.1.1b1 (2018-11-06)
+--------------------
 
 - Experimental workaround for connectivity problems: Throw away chunks
   of blobs rather than failing completely
